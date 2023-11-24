@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Indie+Flower&family=Sansita&family=Shadows+Into+Light&family=Ubuntu&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
+    <title>URL Snip</title>
+</head>
+
+<body>
+    <style>
+        * {
+            /* margin: 0;
+            padding: 0; */
+            box-sizing: border-box;
+            font-family: 'Ubuntu', sans-serif;
+        }
+
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        label {
+            font-size: 20px;
+            text-transform: capitalize;
+        }
+
+        label::after {
+            content: ":";
+            font-weight: 700;
+        }
+
+        .form-container {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            width: max-content;
+            margin: 0 auto;
+            padding: 25px 40px;
+            background-color: #f2f2f2;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        input {
+            padding: 10px 5px;
+            margin: 8px 0;
+            width: 400px;
+            display: inline-block;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            margin: 8px 0;
+            border: none;
+            border-radius: 4px;
+            font-size: 1.1em;
+            cursor: pointer;
+        }
+        @media screen and (max-width:500px) {
+            .form-container{
+                padding: 10px 20px;
+            }
+            input{
+                width: 250px;
+            }
+        }
+    </style>
+
+    <div class="form-container" style="display: none;">
+        <h2>Shorten Url Here</h2>
+        <form action="/" method="POST">
+            <input type="hidden" name="csrfmiddlewaretoken"
+                value="5rYsgE5UT2en0cLjgQVwSHya7vGXg0x0XQwB7O43WJ82fp9cmI5UvcddjAywYzN5">
+
+            <div><label for="alias">alias</label></br>
+                <input type="text" name="alias" maxlength="25" id="id_alias">
+                <span style="color: red;font-size: small;"></span>
+            </div>
+
+            <div><label for="url">url</label></br>
+                <input type="url" name="url" maxlength="200" required="" id="id_url">
+                <span style="color: red;font-size: small;"></span>
+            </div>
+
+            <div><label for="name">name</label></br>
+                <input type="text" name="name" maxlength="100" id="id_name">
+                <span style="color: red;font-size: small;"></span>
+            </div>
+
+            <button>Submit</button>
+
+        </form>
+    </div>
+    <div class="form-container">
+        <h2>Shorten Url Here</h2>
+        <form action="/" method="POST">
+            {% csrf_token %}
+            {% for field in form %}
+            <div><label for="{{field.name}}">{{field.name}}</label></br>
+                {{field}}
+                {% if field.errors %}
+                <p style="color: red;font-size: small; margin-top: 0; padding-top: 0; font-weight: bold;">Invalid
+                    {{field.name}}.</p>
+                {% endif %}
+            </div>
+            {% endfor %}
+            <button>Submit</button>
+        </form>
+    </div>
+    {% if snippedurl %}
+    <br><br>
+    <div class="form-container">
+        <h3 style="margin-bottom: 0;">Short URL:-
+            <button style="background-color: Gray; padding: 5px; align-items: center;">
+                <a href="https://api.whatsapp.com/send?text={{snippedurl}}" target="_blank" style="color: inherit;">
+                    <span class="material-symbols-outlined">
+                        share
+                    </span>
+                </a>
+            </button>
+        </h3>
+        <a href="{{snippedurl}}">
+            {% if name %}
+            <h3 style="text-decoration: none;color: black;">{{name}}</h3>
+            {% endif %}
+            <h4>
+                {{snippedurl}}
+            </h4>
+        </a>
+    </div>
+    {% endif %}
+</body>
+
+</html>
