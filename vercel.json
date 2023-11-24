@@ -16,7 +16,7 @@
   ],
   "routes": [
     {
-      "src": "/static_url/(.*)",
+      "src": "/static/(.*)",
       "dest": "/static_build/$1"
     },
     {
