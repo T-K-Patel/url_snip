@@ -28,6 +28,32 @@
         margin: 0;
         padding: 0;
     }
+
+    .disabled-input {
+        position: relative;
+        z-index: 1;
+    }
+
+    .disabled-input input {
+        position: relative;
+        z-index: 1;
+    }
+
+    .lock-label {
+        content: "";
+        display: flex;
+        align-items: center;
+        width: 20px;
+        padding-top: 8px;
+        height: 100%;
+        position: absolute;
+        right: 10px;
+        top: 0;
+        /* bottom: 50%; */
+        background-image: url(../images/lock.svg);
+        background-position: center center;
+        z-index: 1000;
+    }
 </style>
 
 <body>
@@ -76,10 +102,15 @@
                                         <div class="w-100 d-md-flex justify-content-between">
                                             <div class="col-md-5 col-12 m-0 mb-4 mb-md-0">
                                                 <label for="custom-domain-disabled">Domain<br>
-                                                    <input type="text"
-                                                        style="background-color: rgb(214, 214, 214); color: black; padding-right: 35px;"
-                                                        id="custom-domain-disabled" disabled="true" name="domain"
-                                                        value="{{domain}}">
+                                                    <div class="disabled-input">
+                                                        <div class="lock-label">
+                                                            <img src="{% static 'images/lock.svg' %}" alt="">
+                                                        </div>
+                                                        <input type="text" class=""
+                                                            style="background-color: rgb(214, 214, 214); color: black; padding-right: 35px;"
+                                                            id="custom-domain-disabled" disabled="true" name="domain"
+                                                            value="{{domain}}">
+                                                    </div>
                                                 </label>
                                             </div>
                                             <div class="d-none d-md-flex flex-column justify-content-evenly fw-bold m-0 mb-0"

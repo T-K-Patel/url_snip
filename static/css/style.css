@@ -27,7 +27,7 @@ section.free-hook-block .block-content {
     margin: 0 auto;
 }
 
-label[for='custom-domain-disabled']::after {
+/* label[for='custom-domain-disabled']::after {
     content: "";
     display: block;
     width: 20px;
@@ -36,13 +36,7 @@ label[for='custom-domain-disabled']::after {
     right: 10px;
     bottom: 20px;
     background-image: url(../images/lock.svg);
-}
-
-#custom-domain-disabled-lock {
-    width: 2rem;
-    background-image: url(../images/stars.svg);
-}
-
+} */
 
 section.free-hook-block .block-content .tabs {
     background: transparent;

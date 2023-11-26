@@ -96,7 +96,7 @@ def App(request):
                     return render(request, 'url_short_form.html', {'urls': urls, "domain": getDomain(host), 'host': host, "data": data})
                 else:
                     if auto:
-                        del data['alias']
+                        data['alias'] = ""
                     return render(request, 'url_short_form.html', {'urls': urls, "domain": getDomain(host), 'host': host, "data": data, "error": {"other": "Some error occured"}}, status=500)
 
             if not auto and serializer.errors.get('alias'):
@@ -105,14 +105,12 @@ def App(request):
                 else:
                     error = "Invalid key."
                 if auto:
-                    del data['alias']
+                    data['alias'] = ""
                 return render(request, 'url_short_form.html', {'urls': urls, "domain": getDomain(host), 'host': host, 'data': data, "error": {"alias": error}}, status=400)
             if auto:
-                del data['alias']
+                data['alias'] = ""
             error = {"url": "Invalid Url"}if serializer.errors['url'] else {
                 "other": "Some error occured"}
-            if auto:
-                del data['alias']
             return render(request, 'url_short_form.html', {'urls': urls, "domain": getDomain(host), 'host': host, 'data': data, "error": error}, status=400)
 
     return render(request, 'url_short_form.html', {'urls': urls, "domain": getDomain(host), 'host': host})
