@@ -1,0 +1,42 @@
+<style>
+    .navbar {
+        background-color: #3498db;
+        padding: 15px;
+    }
+
+    .navbar-brand,
+    .navbar-nav a {
+        color: #fff;
+    }
+
+    .navbar-right {
+        display: flex;
+        align-items: center;
+        margin-left: auto;
+    }
+</style>
+<nav class="navbar navbar-expand-lg navbar-dark border-bottom">
+    <div class="container">
+        <a class="navbar-brand" href="/">
+            <h3 class="m-0">URL Snip</h3>
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+            aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse my-3 my-lg-0 flex-end" id="navbarNav">
+            <div class="navbar-right d-flex flex-end">
+                <div class="navbar-right flex-column gap-3 gap-lg-0 flex-lg-row flex-end">
+                    {% if request.user.is_authenticated %}
+                    <p class="m-0"><a href="/me/" class="text-light text-decoration-none mx-3 btn btn-outline-dark">Profile</a></p>
+                    <a class="mx-3 btn btn-dark text-light" href="/logout/">Logout</a>
+                    {% else %}
+
+                    <a class="mx-3 btn btn-dark text-light" href="/login/">Login</a>
+
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</nav>
