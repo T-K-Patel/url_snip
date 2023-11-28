@@ -10,7 +10,6 @@ from urllib.parse import urlparse, urljoin
 
 def getHost(url):
     u = urlparse(url)
-    print(u.scheme + "://" + u.hostname)
     return u.scheme + "://" + u.hostname
 
 
@@ -29,8 +28,6 @@ def GetShort(request, url):
 
 
 def LoadTemp(request):
-    if request.method == "POST":
-        print(request.POST)
     urls = []
     host = request.build_absolute_uri("/")
     if request.user.is_authenticated:
@@ -64,7 +61,6 @@ def App(request):
         urls = ShortURLSerializer(t, many=True).data
 
     if request.method == "POST":
-        print(request.POST)
         data = {"alias": request.POST.get('alias'),
                 "url": request.POST.get('url'), "user": request.user.pk}
         auto = False

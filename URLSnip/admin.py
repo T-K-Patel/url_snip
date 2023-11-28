@@ -4,7 +4,7 @@ from .models import *
 
 
 class ShortURLAdmin(admin.ModelAdmin):
-    list_display = ['alias', 'url', 'user', 'modified', 'created']
+    list_display = ['alias', 'url_domain', 'user', 'modified', 'created']
     list_search = ['alias', 'url', 'user', 'modified', 'created']
 
 

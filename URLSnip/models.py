@@ -2,7 +2,7 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.core.validators import URLValidator
 from django.core.exceptions import ValidationError
-
+from urllib.parse import urlparse
 
 def validate_url(value):
     validator = URLValidator()
@@ -16,7 +16,7 @@ def validate_url(value):
 
 class ShortURL(models.Model):
     alias = models.CharField(max_length=25, unique=True)
-    url = models.TextField(max_length=1000, validators=[validate_url])
+    url = models.TextField(max_length=1500,validators=[validate_url])
     user = models.ForeignKey(
         User, on_delete=models.SET_NULL, null=True, blank=True)
     modified = models.DateTimeField(auto_now=True, editable=False)
@@ -24,3 +24,7 @@ class ShortURL(models.Model):
 
     def __str__(self):
         return self.alias
+
+    def url_domain(self):
+        u = urlparse(self.url)
+        return u.scheme + "://" + u.hostname
