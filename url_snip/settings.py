@@ -54,6 +54,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'url_snip.middleware.InvalidateSessionMiddleware',
 ]
 
 ROOT_URLCONF = 'url_snip.urls'
@@ -93,6 +94,12 @@ if not DEBUG:
             'OPTIONS': {'sslmode': 'require'},
         }
     }
+    EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+    EMAIL_HOST = os.environ["EMAIL_HOST"]
+    EMAIL_PORT = os.environ["EMAIL_PORT"]
+    EMAIL_USE_TLS = True
+    EMAIL_HOST_USER = os.environ["EMAIL_HOST_USER"]
+    EMAIL_HOST_PASSWORD = os.environ["EMAIL_HOST_PASSWORD"]
 else:
     DATABASES = {
         'default': {
@@ -100,6 +107,7 @@ else:
             'NAME': BASE_DIR / 'db.sqlite3',
         }
     }
+    EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators

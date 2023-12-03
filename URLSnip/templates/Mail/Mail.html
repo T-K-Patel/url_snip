@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Verification Code</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            line-height: 1.6;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            color: #333;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #fff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: 5px;
+            margin-top: 20px;
+        }
+
+        h1 {
+            color: #3498db;
+        }
+
+        p {
+            margin-bottom: 20px;
+        }
+
+        .verification-code {
+            font-size: 24px;
+            font-weight: bold;
+            color: #e74c3c;
+        }
+        button{
+            padding: 8px;
+            font-size: 1.1rem;
+            color: white;
+            background: #3498db;
+            border: 0;
+            border-radius: 5px;
+        }
+
+        .note {
+            color: #777;
+        }
+
+        .footer {
+            margin-top: 20px;
+            padding-top: 10px;
+            border-top: 1px solid #eee;
+            text-align: center;
+            color: #777;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>Email Verification</h1>
+        <p>Hello {{name}},</p>
+        <p>Your verification code for <b>key= {{key}}</b> is:</p>
+        <p class="verification-code">{{otp}}</p>
+        <a href="{{base}}verify/?t={{token}}"><button>Verify</button></a>
+        <p class="note">Please use this code to verify your email address. The code is valid for 5 minutes.</p>
+        <div class="footer">
+            <p>If you didn't request this verification, please ignore this email.</p>
+            <p>Thanks, <br>URL Snip Team</p>
+        </div>
+    </div>
+</body>
+
+</html>

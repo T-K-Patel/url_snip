@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OTP Verification</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+
+<body>
+    <div class="container mt-5">
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-body">
+                        <h2 class="card-title text-center mb-1">OTP Verification</h2>
+                        <p class="text-center">for {{email}}</p>
+                        <p><b>Note:</b> Once You verify, you will not be able to login untill you reset your password.
+                        </p>
+
+                        {% if error or messages %}
+                        <div class="alert alert-info">
+                            <ul class="mb-0">
+                                {% if error %}
+                                <li>{{ error }}</li>
+                                {% endif %}
+                                {% for message in messages %}
+                                <li>{{ message }}</li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                        {% endif %}
+
+                        <form method="post" action="{% url 'otp_verification' %}?t={{token}}" class="needs-validation"
+                            novalidate>
+                            {% csrf_token %}
+                            <div class="mb-3">
+                                <label for="otp" class="form-label"><b>Enter OTP:</b> <small>(Key = {{key}})</small></label>
+                                <div class="input-group">
+                                    <input type="tel" inputmode="numeric" name="otp1" oninput="this.value = this.value.replace(/[^0-9]/g, '')" class="form-control otp-input text-center"
+                                        maxlength="1" pattern="\d{1}" required>
+                                    <input type="tel" inputmode="numeric" name="otp2" oninput="this.value = this.value.replace(/[^0-9]/g, '')" class="form-control otp-input text-center"
+                                        maxlength="1" pattern="\d{1}" required>
+                                    <input type="tel" inputmode="numeric" name="otp3" oninput="this.value = this.value.replace(/[^0-9]/g, '')" class="form-control otp-input text-center"
+                                        maxlength="1" pattern="\d{1}" required>
+                                    <input type="tel" inputmode="numeric" name="otp4" oninput="this.value = this.value.replace(/[^0-9]/g, '')" class="form-control otp-input text-center"
+                                        maxlength="1" pattern="\d{1}" required>
+                                    <input type="tel" inputmode="numeric" name="otp5" oninput="this.value = this.value.replace(/[^0-9]/g, '')" class="form-control otp-input text-center"
+                                        maxlength="1" pattern="\d{1}" required>
+                                    <input type="tel" inputmode="numeric" name="otp6" oninput="this.value = this.value.replace(/[^0-9]/g, '')" class="form-control otp-input text-center"
+                                        maxlength="1" pattern="\d{1}" required>
+                                    
+                                </div>
+                            </div>
+                            <div class="d-flex flex-end w-100 justify-content-end ">
+                                <button type="submit" class="btn btn-primary">Verify OTP</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Include Bootstrap JS and Popper.js if needed -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Add your custom JavaScript for auto-changing input fields -->
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            var inputs = document.querySelectorAll(".otp-input");
+
+            function focusNextInput(currentInput) {
+                var next = currentInput.nextElementSibling;
+                if (next) {
+                    next.focus();
+                }
+            }
+
+            function focusPrevInput(currentInput) {
+                var prev = currentInput.previousElementSibling;
+                if (prev) {
+                    prev.focus();
+                }
+            }
+
+            for (var i = 0; i < inputs.length; i++) {
+                inputs[i].addEventListener("input", function () {
+                    var currentInput = this;
+                    var next = currentInput.nextElementSibling;
+
+                    if (next && currentInput.value.length === currentInput.maxLength) {
+                        focusNextInput(currentInput);
+                    }
+                });
+
+                inputs[i].addEventListener("keydown", function (e) {
+                    if (e.key === "Backspace" && this.value.length === 0) {
+                        focusPrevInput(this);
+                    }
+                });
+            }
+        });
+    </script>
+</body>
+
+</html>
