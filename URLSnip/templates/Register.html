@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+
+{% block title %}
+
+<title>Registration | URL Snip</title>
+{% endblock title %}
+
+{% block style_script %}
+
+{% endblock style_script %}
+
+{% block body %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-body">
+                    <h2 class="card-title text-center mb-4">Registration</h2>
+
+                    {% if messages %}
+                    <div class="alert alert-info">
+                        <ul class="mb-0">
+                            {% for message in messages %}
+                            <li>{{ message }}</li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                    {% endif %}
+                    {% if success %}
+                    <div class="alert alert-info">
+                        <ul class="mb-0">
+                            <li>{{ success }}</li>
+                        </ul>
+                    </div>
+                    {% else %}
+                    <form method="post" action="{% url 'register' %}" class="needs-validation">
+                        {% csrf_token %}
+                        <div class="mb-3">
+                            <label for="id_username" class="form-label">Username:</label>
+                            <input type="text" name="username" id="id_username" class="form-control"
+                                value="{{data.username}}" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="id_email" class="form-label">Email:</label>
+                            <input type="email" name="email" id="id_email" class="form-control" value="{{data.email}}"
+                                required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="id_password" class="form-label">Password:</label>
+                            <input type="password" name="password" id="id_password" class="form-control" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="id_c_password" class="form-label">Confirm Password:</label>
+                            <input type="password" name="cpassword" id="id_c_password" class="form-control" required>
+                        </div>
+                        <div class="d-flex flex-end w-100 justify-content-end ">
+                            <button type="submit" class="btn btn-primary">Register</button>
+                        </div>
+                    </form>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock body %}

@@ -1,109 +1,104 @@
-<!DOCTYPE html>
-<html lang="en">
+{% extends "base.html" %}
+{% block title %}
+<title>URL Snip - Home</title>
+{% endblock title %}
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>URL Snip - Home</title>
-    <!-- Include Bootstrap CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Add your custom CSS if needed -->
-    <style>
-        /* Add your custom styles here */
-        body {
-            font-family: 'Arial', sans-serif;
-            background-color: #f8f9fa;
-            margin: 0;
-            padding: 0;
-        }
 
-        .jumbotron {
-            background-color: #3498db;
-            color: #fff;
-            padding: 80px 0;
-            text-align: center;
-        }
+{% block style_script %}
+<style>
+    /* Add your custom styles here */
+    body {
+        font-family: 'Arial', sans-serif;
+        background-color: #f8f9fa;
+        margin: 0;
+        padding: 0;
+    }
 
-        .jumbotron h1 {
-            font-size: 3em;
-        }
+    .jumbotron {
+        background-color: #3498db;
+        color: #fff;
+        padding: 80px 0;
+        text-align: center;
+    }
 
-        .features {
-            padding: 30px 0;
-            background-color: #fff;
-            text-align: center;
-            overflow: hidden;
-            /* Prevent card overflow */
-        }
+    .jumbotron h1 {
+        font-size: 3em;
+    }
 
-        .feature-box {
-            margin-bottom: 30px;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            position: relative;
-        }
+    .features {
+        padding: 30px 0;
+        background-color: #fff;
+        text-align: center;
+        overflow: hidden;
+        /* Prevent card overflow */
+    }
 
-        .feature-box h3 {
-            margin-bottom: 10px;
-        }
+    .feature-box {
+        margin-bottom: 30px;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        position: relative;
+    }
 
-        .feature-box p {
-            margin-bottom: 0;
-        }
+    .feature-box h3 {
+        margin-bottom: 10px;
+    }
 
-        .pro-tag {
-            background-color: #e74c3c;
-            color: #fff;
-            padding: 3px;
-            border-radius: 5px;
-            font-size: 0.5em;
-        }
-    </style>
-</head>
+    .feature-box p {
+        margin-bottom: 0;
+    }
 
-<body>
-    <!-- Navbar -->
-    {% include "header.html" %}
-    
-    <!-- Jumbotron -->
-    <div class="jumbotron">
-        <div class="container">
-            <h1>URL Snip - Shorten Your Links</h1>
-            <p>Quickly create short and shareable URLs for easy access.</p>
-            <a href="/app/"><button class="btn btn-light">Get Started</button></a>
-        </div>
+    .pro-tag {
+        background-color: #e74c3c;
+        color: #fff;
+        padding: 3px;
+        border-radius: 5px;
+        font-size: 0.5em;
+    }
+</style>
+{% endblock style_script %}
+
+
+{% block body %}
+<!-- Navbar -->
+{% include "components/header.html" %}
+
+<!-- Jumbotron -->
+<div class="jumbotron">
+    <div class="container">
+        <h1>URL Snip - Shorten Your Links</h1>
+        <p>Quickly create short and shareable URLs for easy access.</p>
+        <a href="{% url 'app' %}"><button class="btn btn-light">Get Started</button></a>
     </div>
+</div>
 
-    <!-- Features -->
-    <div class="container features">
-        <h2 class="mt-0 mb-4">Features</h2>
-        <div class="row">
-            <div class="col-md-4">
-                <div class="feature-box">
-                    <h3>Easy to Use</h3>
-                    <p>Shorten your URLs with just a few clicks. No technical skills required.</p>
-                </div>
+<!-- Features -->
+<div class="container features">
+    <h2 class="mt-0 mb-4">Features</h2>
+    <div class="row">
+        <div class="col-md-4">
+            <div class="feature-box">
+                <h3>Easy to Use</h3>
+                <p>Shorten your URLs with just a few clicks. No technical skills required.</p>
             </div>
-            <div class="col-md-4">
-                <div class="feature-box">
-                    <h3>Customize URLs</h3>
-                    <p>Personalize your short URLs to make them memorable and relevant.</p>
-                </div>
+        </div>
+        <div class="col-md-4">
+            <div class="feature-box">
+                <h3>Customize URLs</h3>
+                <p>Personalize your short URLs to make them memorable and relevant.</p>
             </div>
-            <div class="col-md-4">
-                <div class="feature-box">
-                    <h3>Analytics <sup class="pro-tag">Pro</sup></h3>
-                    <p>Track the performance of your short URLs with detailed analytics.</p>
-                </div>
+        </div>
+        <div class="col-md-4">
+            <div class="feature-box">
+                <h3>Analytics <sup class="pro-tag">Pro</sup></h3>
+                <p>Track the performance of your short URLs with detailed analytics.</p>
             </div>
         </div>
     </div>
+</div>
 
-    <!-- Footer -->
-    {% include "footer.html" %}
+<!-- Footer -->
+{% include "components/footer.html" %}
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-</body>
-
-</html>
+{% endblock body %}

@@ -4,7 +4,8 @@ from rest_framework import serializers
 from . models import *
 import random
 import string
-reserved_paths = ['admin', 'temp', 'login', 'logout', 'register']
+reserved_paths = ['admin', 'temp', 'login', 'logout', 'activate',
+                  'register', 'verify', 'resetpassword', 'forgotpassword', 'me']
 
 
 def generateShort(length=7):

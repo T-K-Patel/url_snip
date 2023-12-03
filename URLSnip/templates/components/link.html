@@ -1,10 +1,10 @@
-<div class="col-11 mx-auto h-100">
+<div class="col-11 mx-auto">
     <div class="url-box">
         <h4>Short URL: <a href="{% url 'geturl' url.alias %}" target="_blank"><span class="text-primary"
                     id="url-{{url.alias}}">/{{url.alias}}</span></a>
         </h4>
         <div class="url-info">
-            <p><strong>Original URL:</strong> <a href="{{url.url}}" style="color: inherit; word-break: break-all;">{{url.url}}</a></p>
+            <p><strong>Original URL:</strong> <a href="{{url.url}}" style="color: inherit; word-break: break-all;">{{url.url|truncatechars:100}}</a></p>
             <p><strong>Time Created:</strong> {{url.created}}</p>
         </div>
         <button class="btn btn-primary btn-copy my-2" id="{{url.alias}}"

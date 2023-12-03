@@ -14,11 +14,11 @@
 <footer class="footer bg-dark text-white">
     <div class="container">
         {% if request.user.is_authenticated %}
-        <p class="user-info">You are logged in as <a href="/me/" class="text-white">{{request.user}}</a></p>
-        <p style="width: fit-content;" class="mx-auto"> <a class="btn btn-light" href="/logout/">Logout</a></p>
+        <p class="user-info">You are logged in as <a href="{% url 'me' %}" class="text-white">{{request.user}}</a></p>
+        <p style="width: fit-content;" class="mx-auto"> <a class="btn btn-light" href="{% url 'logout' %}">Logout</a></p>
         {% else %}
         <p class="user-info">You are not logged in</p>
-        <p style="width: fit-content;" class="mx-auto"> <a class="btn btn-light" href="/login/">Login</a></p>
+        <p style="width: fit-content;" class="mx-auto"> <a class="btn btn-light" href="{% url 'login' %}">Login</a></p>
         {% endif %}
         <p>&copy; 2023 URL Snip. All rights reserved.</p>
     </div>

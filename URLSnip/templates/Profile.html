@@ -1,97 +1,86 @@
-<!DOCTYPE html>
-<html lang="en">
+{% extends "base.html" %}
+{% block title %}
+<title>{{request.user}} | Profile Page</title>
+{% endblock title %}
+{% block style_script %}
+<style>
+    /* Add your custom styles here */
+    body {
+        font-family: 'Sansita', sans-serif;
+        background-color: #f8f9fa;
+        margin: 0;
+        padding: 0;
+    }
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Profile Page</title>
-    <!-- Include Bootstrap CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Add your custom CSS if needed -->
-    <style>
-        /* Add your custom styles here */
-        body {
-            font-family: 'Sansita', sans-serif;
-            background-color: #f8f9fa;
-            margin: 0;
-            padding: 0;
-        }
+    .navbar {
+        background-color: #3498db;
+        padding: 15px;
+    }
 
-        .navbar {
-            background-color: #3498db;
-            padding: 15px;
-        }
+    .navbar-brand,
+    .navbar-nav a {
+        color: #fff;
+    }
 
-        .navbar-brand,
-        .navbar-nav a {
-            color: #fff;
-        }
+    .jumbotron {
+        background-color: #3498db;
+        color: #fff;
+        padding: 70px 0;
+        text-align: center;
+    }
 
-        .jumbotron {
-            background-color: #3498db;
-            color: #fff;
-            padding: 70px 0;
-            text-align: center;
-        }
+    .jumbotron h1 {
+        font-size: 3em;
+    }
 
-        .jumbotron h1 {
-            font-size: 3em;
-        }
+    .profile-details {
+        padding: 50px 0;
+        background-color: #fff;
+        text-align: center;
+    }
+</style>
+{% endblock style_script %}
 
-        .profile-details {
-            padding: 50px 0;
-            background-color: #fff;
-            text-align: center;
-        }
 
-        
-    </style>
-</head>
+{% block body %}
+<!-- Navbar -->
+{% include "components/header.html" %}
 
-<body>
-    <!-- Navbar -->
-    {% include "header.html" %}
-
-    <!-- Jumbotron -->
-    <div class="jumbotron">
-        <div class="container">
-            <h1 class="text-capitalize">Welcome, {{request.user}}!</h1>
-            <p>Your URL Snip profile page.</p>
-        </div>
+<!-- Jumbotron -->
+<div class="jumbotron">
+    <div class="container">
+        <h1 class="text-capitalize">Welcome, {{request.user}}!</h1>
+        <p>Your URL Snip profile page.</p>
     </div>
+</div>
 
-    <!-- Profile Details -->
-    <div class="container profile-details">
-        <div class="row">
-            <div class="col-md-6 offset-md-3">
-                <h2>Profile Details</h2>
-                <div class="user-info">
-                    <p><strong>Username:</strong> {{request.user.username}}</p>
-                    <p><strong>Email:</strong>
-                        {% if request.user.email %}
-                        {{request.user.email}}
-                        {% else %}
-                        --------
-                        {% endif %}
-                    </p>
-                    <p><strong>Date Joined:</strong> {{request.user.date_joined}}</p>
-                    <a href="{{url 'resetpassword'}}" class="btn btn-primary">Reset Password</a>
-                </div>
+<!-- Profile Details -->
+<div class="container profile-details">
+    <div class="row">
+        <div class="col-md-6 offset-md-3">
+            <h2>Profile Details</h2>
+            <div class="user-info">
+                <p><strong>Username:</strong> {{request.user.username}}</p>
+                <p><strong>Email:</strong>
+                    {% if request.user.email %}
+                    {{request.user.email}}
+                    {% else %}
+                    --------
+                    {% endif %}
+                </p>
+                <p><strong>Date Joined:</strong> {{request.user.date_joined}}</p>
+                <a href="{%url 'resetpassword'%}" class="btn btn-primary">Reset Password</a>
             </div>
         </div>
     </div>
+</div>
 
-    <!-- Shortened URLs Section -->
-    {% with urls=urls host=host %}
-    {% include "your_url.html" %}
-    {% endwith %}
+<!-- Shortened URLs Section -->
+{% with urls=urls host=host %}
+{% include "components/your_url.html" %}
+{% endwith %}
 
-    <!-- Footer -->
-    {% include "footer.html" %}
+<!-- Footer -->
+{% include "components/footer.html" %}
 
-    <!-- Include Bootstrap JS and Popper.js if needed -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <!-- Add your custom scripts -->
-</body>
-
-</html>
+{% endblock body %}

@@ -15,7 +15,7 @@ class InvalidateSessionMiddleware(SessionMiddleware):
                 session_key = decrypt(_session_key)
             except:
                 request.session.flush()
-                return HttpResponseRedirect('/login/?e=Your session has expired or Password was reset. Login again to continue.')
+                return HttpResponseRedirect('/login?e=Your session has expired or Password was reset. Login again to continue.')
             if user_key and session_key and user_key != session_key:
                 request.session.flush()
-                return HttpResponseRedirect('/login/?e=Your session has expired or Password was reset. Login again to continue.')
+                return HttpResponseRedirect('/login?e=Your session has expired or Password was reset. Login again to continue.')

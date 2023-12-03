@@ -28,12 +28,17 @@
             <div class="navbar-right d-flex flex-end">
                 <div class="navbar-right flex-column gap-3 gap-lg-0 flex-lg-row flex-end">
                     {% if request.user.is_authenticated %}
-                    <p class="m-0"><a href="/me/" class="text-light text-decoration-none mx-3 btn btn-outline-dark">Profile</a></p>
-                    <a class="mx-3 btn btn-dark text-light" href="/logout/">Logout</a>
+                    <p class="m-0"><a href="{% url 'app' %}"
+                            class="text-light text-decoration-none mx-3 btn btn-outline-dark">Get Started</a></p>
+                    <p class="m-0"><a href="{% url 'me' %}"
+                            class="text-light text-decoration-none mx-3 btn btn-outline-dark">Profile</a></p>
+                    {% if request.user.is_superuser %}
+                    <p class="m-0"><a href="admin/" class="text-light text-decoration-none mx-3 btn btn-dark">Admin
+                            Page</a></p>
+                    {% endif %}
+                    <a class="mx-3 btn btn-dark text-light" href="{% url 'logout' %}">Logout</a>
                     {% else %}
-
-                    <a class="mx-3 btn btn-dark text-light" href="/login/">Login</a>
-
+                    <a class="mx-3 btn btn-dark text-light" href="{% url 'login' %}">Login</a>
                     {% endif %}
                 </div>
             </div>

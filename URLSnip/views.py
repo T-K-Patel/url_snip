@@ -1,12 +1,16 @@
+from django.http import HttpResponse
+from django.utils import timezone
 import json
 import time
 from django.shortcuts import get_object_or_404, redirect, render
+from django.db.models import Q
 from . models import ShortURL
 from django.contrib.auth import logout, login, authenticate
 from .serializers import *
 from .encryption import *
 from urllib.parse import urlparse
-from .tasks import sendOTP
+from .tasks import sendOTP, sendRegMail
+from django.contrib.auth.decorators import user_passes_test
 
 
 def getHost(url):
@@ -30,7 +34,7 @@ def GetShort(request, url):
 
 def ForgotPassword(request):
     if request.user.is_authenticated:
-        return redirect('/me/')
+        return redirect('/me')
     e = request.GET.get('e', None)
     if request.method == 'POST':
         data = {"email": request.POST.get('email')}
@@ -45,7 +49,7 @@ def ForgotPassword(request):
                     sendOTP(request.build_absolute_uri("/"), user.email, user.username.capitalize(),
                             otp, validation["key"], token)
 
-                    return redirect('/verify/?t=%s' % token, permanent=True)
+                    return redirect('/verify?t=%s' % token, permanent=True)
                 else:
                     return render(request, 'ForgotPassword.html', {"error": "Your account is not active."})
             else:
@@ -57,7 +61,7 @@ def ForgotPassword(request):
 
 def VerifyEmail(request):
     if request.user.is_authenticated:
-        return redirect('/me/')
+        return redirect('/me')
     e = request.GET.get('e', None)
     token = request.GET.get('t', None)
     try:
@@ -68,10 +72,10 @@ def VerifyEmail(request):
         key = data['key']
         rpfupass = data['rpfupass']
     except:
-        return redirect('/forgotpassword/?e=Invalid Verification Link. Get new one.', permanent=True)
+        return redirect('/forgotpassword?e=Invalid Verification Link. Get new one.', permanent=True)
 
     if timestamp < time.time()-300:
-        return redirect("/forgotpassword/?e=Verification Link Has Expired. Get new one.", permanent=True)
+        return redirect("/forgotpassword?e=Verification Link Has Expired. Get new one.", permanent=True)
 
     if request.method == 'POST':
         otp = ""
@@ -86,13 +90,13 @@ def VerifyEmail(request):
                     rpfuwoptoken = encrypt(json.dumps(token))
                     user.set_password(rpfupass)
                     user.save()
-                    return redirect("/resetpassword/?op=%s" % rpfuwoptoken, permanent=True)
+                    return redirect("/resetpassword?op=%s" % rpfuwoptoken, permanent=True)
                 else:
-                    return redirect(f"/verify/?t={token}&e=Invalid otp.", permanent=True)
+                    return redirect(f"/verify?t={token}&e=Invalid otp.", permanent=True)
             else:
-                return redirect(f"/verify/?t={token}&e=Invalid User.", permanent=True)
+                return redirect(f"/verify?t={token}&e=Invalid User.", permanent=True)
         else:
-            return redirect(f"/verify/?t={token}&e=Please enter otp.", permanent=True)
+            return redirect(f"/verify?t={token}&e=Please enter otp.", permanent=True)
     return render(request, 'Verify.html', {"email": email, "key": key, "error": e, "token": token})
 
 
@@ -111,10 +115,10 @@ def ResetPasssword(request):
             return redirect('/resetpassword/', permanent=True)
         user = User.objects.filter(username=username).first()
         if not user.check_password(opass):
-            return redirect('/forgotpassword/?e=Invalid Reset Password Link', permanent=True)
+            return redirect('/forgotpassword?e=Invalid Reset Password Link', permanent=True)
 
     elif not request.user.is_authenticated:
-        return redirect('/forgotpassword/?e=Cannot reset password.', permanent=True)
+        return redirect('/forgotpassword?e=Cannot reset password.', permanent=True)
     else:
         user = request.user
 
@@ -147,8 +151,8 @@ def ResetPasssword(request):
                 if request.user.is_authenticated:
                     request.session['session_pass_key'] = encrypt(
                         user.password)
-                    return redirect('/me/', permanent=True)
-                return redirect('/login/', permanent=True)
+                    return redirect('/me', permanent=True)
+                return redirect('/login', permanent=True)
                 # return render(request, 'ResetPassword.html', {"success": "Your password has been changed."})
             else:
                 return render(request, 'ResetPassword.html', {"op": op, "error": "Your account is not active."})
@@ -164,7 +168,7 @@ def Home(request):
 
 def Profile(request):
     if not request.user.is_authenticated:
-        return redirect('/login/?next=/me/')
+        return redirect('/login?next=/me')
     urls = []
     host = request.build_absolute_uri("/")
     if request.user.is_authenticated:
@@ -175,7 +179,7 @@ def Profile(request):
 
 def App(request):
     if not request.user.is_authenticated:
-        return redirect('/login/?next=/app/')
+        return redirect('/login?next=/app')
     urls = []
     host = request.build_absolute_uri("/")
     if request.user.is_authenticated:
@@ -233,6 +237,71 @@ def App(request):
     return render(request, 'url_short_form.html', {'urls': urls, "domain": getDomain(host), 'host': host})
 
 
+def Register(request):
+    messages = []
+    if request.user.is_authenticated:
+        return redirect("/")
+    if request.method == "POST":
+        username = request.POST.get("username")
+        email = request.POST.get("email")
+        password = request.POST.get("password")
+        cpassword = request.POST.get("cpassword")
+        data = {"username": username, "email": email}
+        user_lst = User.objects.filter(
+            Q(username=username) | Q(email=email))
+        user = user_lst.filter(is_active=True).first()
+        user_ina = user_lst.filter(is_active=False)
+        start_date = timezone.now() - timezone.timedelta(minutes=15)
+        if len(username) < 5:
+            messages += ["Username must contain atleast 5 characters."]
+        elif not username.isalpha():
+            messages += ["Username must contain only letters."]
+        elif user:
+            messages += ["User with this username or email already exists."]
+        elif user_ina.filter(date_joined__gt=start_date).exists():
+            messages += ["Wait 15 minutes before trying again."]
+        else:
+            for u in user_ina.filter(date_joined__lt=start_date):
+                u.delete()
+
+        if not password:
+            messages += ["Please enter password."]
+        elif len(password) < 6:
+            messages += ["Password must contain atleast 6 characters."]
+        elif password != cpassword:
+            messages += ["Confirm Pasword does not match."]
+        success = None
+        if not messages:
+            user = User.objects.create_user(
+                username=username, email=email, is_active=False)
+            user.save()
+            messages = []
+            token = encrypt(json.dumps(
+                {"username": username, "exp": time.time()+15*60}))
+            sendRegMail(request.build_absolute_uri(
+                '/'), email, username, token)
+            success = "Your account has been created. Verify your account by visiting link sent to your mail."
+            data = None
+        return render(request, 'Register.html', {"messages": messages, "data": data, "success": success}, status=(400 if messages else 200))
+    else:
+        return render(request, 'Register.html', {"messages": messages})
+
+
+def Activate(request, token):
+    try:
+        data = json.loads(decrypt(token))
+        if data['exp'] <= time.time():
+            raise Exception("Invalid Link")
+        user = User.objects.get(username=data['username'])
+        if user.is_active:
+            raise Exception("Invalid Link")
+        user.is_active = True
+        user.save()
+        return HttpResponse("<center><h1>Your Account has been activated.</h1></center>")
+    except:
+        return HttpResponse("<center><h1>Invalid Link.</h1></center>",status=400)
+
+
 def Login(request):
     e = request.GET.get('e', None)
     if request.user.is_authenticated:
@@ -241,6 +310,11 @@ def Login(request):
         username = request.POST.get("username")
         password = request.POST.get("password")
         user = authenticate(request, username=username, password=password)
+        u = User.objects.get(username=username)
+        if u:
+            print(u.check_password(password))
+        else:
+            print("No user.")
         if user:
             request.session['session_pass_key'] = encrypt(user.password)
             login(request, user)
@@ -255,7 +329,9 @@ def Logout(request):
     logout(request)
     return redirect("/")
 
-
-# def Demo(request):
-#     request.session['session_pass_key'] = "hellohghkfgsbb"
-#     return render(request, 'home.html')
+@user_passes_test(lambda u: u.is_superuser,'login')
+def clean_users(req):
+    users = User.objects.filter(is_active=False,date_joined__lt=(timezone.now() - timezone.timedelta(minutes=16)))
+    for u in users:
+        u.delete()
+    return HttpResponse("<center><h1>All Inactive Users Deleted.</h1></center>")
