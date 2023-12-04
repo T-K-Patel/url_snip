@@ -149,11 +149,10 @@ def ResetPasssword(request):
                 user.set_password(data['password'])
                 user.save()
                 if request.user.is_authenticated:
-                    request.session['session_pass_key'] = encrypt(
-                        user.password)
+                    request.session['session_pass_key'] = encrypt(json.dumps(
+                        {"pass": user.password, "login_time": time.time()}))
                     return redirect('/me', permanent=True)
                 return redirect('/login', permanent=True)
-                # return render(request, 'ResetPassword.html', {"success": "Your password has been changed."})
             else:
                 return render(request, 'ResetPassword.html', {"op": op, "error": "Your account is not active."})
         else:
@@ -273,7 +272,7 @@ def Register(request):
         success = None
         if not messages:
             user = User.objects.create_user(
-                username=username, email=email, is_active=False)
+                username=username, email=email, password=password, is_active=False)
             user.save()
             messages = []
             token = encrypt(json.dumps(
@@ -299,7 +298,7 @@ def Activate(request, token):
         user.save()
         return HttpResponse("<center><h1>Your Account has been activated.</h1></center>")
     except:
-        return HttpResponse("<center><h1>Invalid Link.</h1></center>",status=400)
+        return HttpResponse("<center><h1>Invalid Link.</h1></center>", status=400)
 
 
 def Login(request):
@@ -310,13 +309,12 @@ def Login(request):
         username = request.POST.get("username")
         password = request.POST.get("password")
         user = authenticate(request, username=username, password=password)
-        u = User.objects.get(username=username)
-        if u:
-            print(u.check_password(password))
-        else:
-            print("No user.")
+        u = User.objects.filter(username=username).first()
+        if u.check_password(password) and not u.is_active:
+            return render(request, 'login.html', {"username": username, "error": "Your account is not verified or has been banned by admin."})
         if user:
-            request.session['session_pass_key'] = encrypt(user.password)
+            request.session['session_pass_key'] = encrypt(json.dumps(
+                {"pass": user.password, "login_time": time.time()}))
             login(request, user)
             return redirect(request.GET.get("next") or "/")
         else:
@@ -329,9 +327,11 @@ def Logout(request):
     logout(request)
     return redirect("/")
 
-@user_passes_test(lambda u: u.is_superuser,'login')
+
+@user_passes_test(lambda u: u.is_superuser, 'login')
 def clean_users(req):
-    users = User.objects.filter(is_active=False,date_joined__lt=(timezone.now() - timezone.timedelta(minutes=16)))
+    users = User.objects.filter(is_active=False, date_joined__lt=(
+        timezone.now() - timezone.timedelta(minutes=16)))
     for u in users:
         u.delete()
     return HttpResponse("<center><h1>All Inactive Users Deleted.</h1></center>")

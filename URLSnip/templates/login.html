@@ -54,7 +54,7 @@
 <div class="login-container">
     <h2 class="mb-3">Login</h2>
     {% if error %}
-    <p class="border border-danger border-2 mb-3 text-center text-danger">{{error}}</p>
+    <p class="border border-danger border-2 mb-3 px-2 text-center text-danger">{{error}}</p>
     {% endif %}
     <form action="" method="POST">
         {% csrf_token %}
